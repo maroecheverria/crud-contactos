@@ -60,9 +60,10 @@ class ContactController extends Controller
     /**
      * Display a resource
      */
-    public function show(Contact $contact = null): JsonResponse
+    public function show($id): JsonResponse
     {
         try {
+            $contact = Contact::find($id);
             if (!$contact)
                 return response()->json(
                     $this->jsonResponseHelper->getErrorResponse('El contacto no existe'),
@@ -129,10 +130,11 @@ class ContactController extends Controller
      * Update the specified resource in storage
      * @throws ValidationException
      */
-    public function update(Request $request, Contact $contact): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         try {
             $this->contactValidator->validate($request);
+            $contact = Contact::find($id);
 
             if (!$contact)
                 return response()->json(
@@ -143,8 +145,8 @@ class ContactController extends Controller
             $contact->update($request->only(['first_name', 'last_name', 'email', 'address']));
             $contact->phones()->delete();
             $contact->phones()->createMany(
-                    $this->contactPhoneRequestHelper->getPhonesFromRequest($request)
-                );
+                $this->contactPhoneRequestHelper->getPhonesFromRequest($request)
+            );
 
             return response()->json(
                 $this->jsonResponseHelper->getSuccessfulResponse(
@@ -170,9 +172,10 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage
      */
-    public function destroy(Contact $contact): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
+            $contact = Contact::find($id);
             if (!$contact)
                 return response()->json(
                     $this->jsonResponseHelper->getErrorResponse('El contacto a eliminar no existe'),
