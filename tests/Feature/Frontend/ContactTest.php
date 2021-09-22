@@ -4,7 +4,7 @@ namespace Tests\Feature\Frontend;
 use Tests\TestCase;
 
 /**
- * Class HomeTest.
+ * Class ContactTest.
  */
 class ContactTest extends TestCase
 {
